@@ -1,0 +1,20 @@
+//package com.yanzhenyidai.server;
+//
+//import io.netty.channel.ChannelFutureListener;
+//import io.netty.channel.ChannelHandlerContext;
+//import io.netty.channel.SimpleChannelInboundHandler;
+//
+///**
+// * @author frank
+// * @version 1.0
+// * @date 2020-04-09 11:00
+// */
+//public class NettyServerSimpleHandler extends SimpleChannelInboundHandler<String> {
+//
+//    protected void channelRead0(ChannelHandlerContext channelHandlerContext, String s) throws Exception {
+//
+//        System.out.println("NettyServer, SimpleHandler: " + s);
+//
+//        channelHandlerContext.writeAndFlush("yes").addListener(ChannelFutureListener.CLOSE);
+//    }
+//}

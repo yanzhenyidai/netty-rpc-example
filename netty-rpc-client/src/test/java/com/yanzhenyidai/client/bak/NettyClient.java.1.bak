@@ -1,0 +1,84 @@
+package com.yanzhenyidai.client;
+
+import com.yanzhenyidai.common.http.Request;
+import com.yanzhenyidai.common.http.Response;
+import com.yanzhenyidai.common.serialize.fastjson.RpcDecoder;
+import com.yanzhenyidai.common.serialize.fastjson.RpcEncoder;
+import io.netty.bootstrap.Bootstrap;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
+import io.netty.channel.*;
+import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.SocketChannel;
+import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.util.CharsetUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/**
+ * @author frank
+ * @version 1.0
+ * @date 2020-04-09 11:50
+ */
+public class NettyClient {
+
+    public static void main(String[] args) throws InterruptedException {
+        NettyClientProcess netty = new NettyClientProcess();
+
+//        Request request = new Request();
+//        request.setRequestId(UUID.randomUUID().toString());
+//        request.setParameter("I'm client");
+
+        netty.send(Unpooled.copiedBuffer("client", CharsetUtil.UTF_8));
+    }
+
+    public static class NettyClientProcess extends SimpleChannelInboundHandler<ByteBuf> {
+
+        private static final Logger logger = LoggerFactory.getLogger(NettyClientProcess.class);
+
+        private ByteBuf response;
+
+        @Override
+        public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+            logger.error("netty client, error:", cause);
+            ctx.close();
+        }
+
+        @Override
+        protected void channelRead0(ChannelHandlerContext channelHandlerContext, ByteBuf s) throws Exception {
+            this.response = s;
+        }
+
+        public ByteBuf send(ByteBuf msg) throws InterruptedException {
+            EventLoopGroup group = new NioEventLoopGroup();
+            try {
+                // 创建并初始化 Netty 客户端 Bootstrap 对象
+                Bootstrap bootstrap = new Bootstrap();
+                bootstrap.group(group);
+                bootstrap.channel(NioSocketChannel.class);
+                bootstrap.handler(new ChannelInitializer<SocketChannel>() {
+                    @Override
+                    public void initChannel(SocketChannel channel) throws Exception {
+                        ChannelPipeline pipeline = channel.pipeline();
+
+                        pipeline.addLast(NettyClientProcess.this); // 处理 RPC 响应
+                        pipeline.addLast(new RpcDecoder(Request.class));
+                        pipeline.addLast(new RpcEncoder(Response.class));
+                    }
+                });
+                bootstrap.option(ChannelOption.TCP_NODELAY, true);
+                // 连接 RPC 服务器
+                ChannelFuture future = bootstrap.connect("127.0.0.1", 3000).sync();
+                // 写入 RPC 请求数据并关闭连接
+                Channel channel = future.channel();
+                channel.writeAndFlush(msg).sync();
+                channel.closeFuture().sync();
+                // 返回 RPC 响应对象
+                return response;
+            } finally {
+                group.shutdownGracefully();
+            }
+        }
+
+    }
+}

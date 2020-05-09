@@ -1,0 +1,93 @@
+//package com.yanzhenyidai.client;
+//
+//import io.netty.bootstrap.Bootstrap;
+//import io.netty.channel.*;
+//import io.netty.channel.nio.NioEventLoopGroup;
+//import io.netty.channel.socket.SocketChannel;
+//import io.netty.channel.socket.nio.NioSocketChannel;
+//import io.netty.handler.codec.bytes.ByteArrayDecoder;
+//import io.netty.handler.codec.string.StringEncoder;
+//
+//import java.nio.charset.Charset;
+//
+///**
+// * @author frank
+// * @version 1.0
+// * @date 2020-04-08 17:20
+// */
+//public class NettyClient extends SimpleChannelInboundHandler<String> {
+//
+//    protected void channelRead0(ChannelHandlerContext channelHandlerContext, String s) throws Exception {
+//        System.out.println(s);
+//    }
+//
+//    public static void main(String[] args) {
+//
+//        EventLoopGroup group = new NioEventLoopGroup();
+//
+//        try {
+//            Bootstrap bootstrap = new Bootstrap();
+//
+//            bootstrap.group(group);
+//            bootstrap.channel(NioSocketChannel.class);
+//
+//            bootstrap.handler(new ChannelInitializer<SocketChannel>() {
+//
+//                protected void initChannel(SocketChannel socketChannel) throws Exception {
+//                    ChannelPipeline pipeline = socketChannel.pipeline();
+//
+//                    pipeline.addLast(new StringEncoder(Charset.forName("GBK")));
+//                    pipeline.addLast(new ByteArrayDecoder());
+//                }
+//            });
+//
+//            // 连接 RPC 服务器
+//            ChannelFuture future = bootstrap.connect("127.0.0.1", 1000).sync();
+//            // 写入 RPC 请求数据并关闭连接
+//            Channel channel = future.channel();
+//            channel.writeAndFlush("hi").sync();
+//            channel.closeFuture().sync();
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        } finally {
+//            group.shutdownGracefully();
+//        }
+//
+////        EventLoopGroup group = new NioEventLoopGroup();
+////
+////        try {
+////            Bootstrap bootstrap = new Bootstrap();
+////
+////            bootstrap.group(group).channel(NioSocketChannel.class).
+////                    remoteAddress(new InetSocketAddress("127.0.0.1", 1000))
+////                    .handler(new ChannelInitializer<SocketChannel>() {
+////                        protected void initChannel(SocketChannel socketChannel) throws Exception {
+////                            ChannelPipeline pipeline = socketChannel.pipeline();
+////
+////                            pipeline.addLast(new StringEncoder(Charset.forName("GBK")));
+////                            pipeline.addLast(new ByteArrayDecoder());
+//////                            pipeline.addLast(new NettyClientHandler());
+////                            pipeline.addLast(new ChunkedWriteHandler());
+////                        }
+////                    });
+////
+////            ChannelFuture channelFuture = bootstrap.connect().sync();
+////
+////            Channel channel = channelFuture.channel();
+////            channel.writeAndFlush("hi").sync();
+////            channel.closeFuture().sync();
+////
+//////            channelFuture.channel().closeFuture().sync();
+////
+////        } catch (Exception e) {
+////            e.printStackTrace();
+////        } finally {
+////            try {
+////                group.shutdownGracefully().sync();
+////            } catch (InterruptedException e) {
+////                e.printStackTrace();
+////            }
+////        }
+//    }
+//
+//}

@@ -1,0 +1,38 @@
+//package com.yanzhenyidai.client;
+//
+//import io.netty.buffer.ByteBuf;
+//import io.netty.buffer.ByteBufUtil;
+//import io.netty.buffer.Unpooled;
+//import io.netty.channel.ChannelHandlerContext;
+//import io.netty.channel.SimpleChannelInboundHandler;
+//import io.netty.util.CharsetUtil;
+//
+///**
+// * @author frank
+// * @version 1.0
+// * @date 2020-04-08 18:01
+// */
+//public class NettyClientHandler extends SimpleChannelInboundHandler<ByteBuf> {
+//
+//
+//    @Override
+//    public void channelActive(ChannelHandlerContext ctx) throws Exception {
+//        ctx.writeAndFlush(Unpooled.copiedBuffer("Hi, I'm Client", CharsetUtil.UTF_8));
+//    }
+//
+//    @Override
+//    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+//        super.channelInactive(ctx);
+//    }
+//
+//    @Override
+//    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+//        super.exceptionCaught(ctx, cause);
+//    }
+//
+//    @Override
+//    protected void channelRead0(ChannelHandlerContext channelHandlerContext, ByteBuf byteBuf) throws Exception {
+//        ByteBuf byteBuf1 = byteBuf.readBytes(byteBuf.readableBytes());
+//        System.out.println("Netty-client --------------" + ByteBufUtil.hexDump(byteBuf1));
+//    }
+//}

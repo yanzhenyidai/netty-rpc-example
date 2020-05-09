@@ -1,0 +1,36 @@
+package com.yanzhenyidai.server;
+
+import com.yanzhenyidai.common.http.Request;
+import com.yanzhenyidai.common.http.Response;
+import io.netty.buffer.ByteBuf;
+import io.netty.channel.ChannelFutureListener;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.SimpleChannelInboundHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/**
+ * @author frank
+ * @version 1.0
+ * @date 2020-04-09 11:34
+ */
+public class NettyServerHandler extends SimpleChannelInboundHandler<ByteBuf> {
+
+    private static final Logger logger = LoggerFactory.getLogger(NettyServer.class);
+
+    @Override
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+        logger.error("netty-handler, error: ", cause);
+        ctx.close();
+    }
+
+    @Override
+    protected void channelRead0(ChannelHandlerContext channelHandlerContext, ByteBuf s) throws Exception {
+
+//        Response response = new Response();
+//        response.setRequestId(s.getRequestId());
+//        response.setResult("I'm server");
+
+        channelHandlerContext.writeAndFlush("server").addListener(ChannelFutureListener.CLOSE);
+    }
+}

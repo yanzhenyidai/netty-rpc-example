@@ -23,7 +23,5 @@ public class Register {
         if (!zkClient.exists(serviceName)) {
             zkClient.createPersistent(serviceName, serviceAddress);
         }
-
-        zkClient.createEphemeralSequential(serviceName + "-hi", serviceAddress);
     }
 }

@@ -5,7 +5,6 @@ import com.yanzhenyidai.server.NettyServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -20,18 +19,12 @@ import java.util.Map;
  * @date 2020-05-26 15:15
  */
 @Component
-public class Server implements ApplicationContextAware{
-//        , InitializingBean {
+public class Server implements ApplicationContextAware {
 
     private static final Logger logger = LoggerFactory.getLogger(Server.class);
 
     @Value("${register.address}")
     private String registerAddress;
-
-
-//    public void afterPropertiesSet() throws Exception {
-//        // TODO
-//    }
 
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         Map<String, Object> serviceBean = new HashMap<String, Object>();

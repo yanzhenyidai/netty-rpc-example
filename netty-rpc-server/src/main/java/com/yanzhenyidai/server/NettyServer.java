@@ -66,6 +66,8 @@ public class NettyServer {
             if (future.isSuccess()) {
                 for (String key : params.keySet()) {
                     new Register().register(key, ip + ":" + port);
+
+                    logger.info("\n\n register success, node: {}, data: {}", key, ip + ":" + port);
                 }
             }
 
